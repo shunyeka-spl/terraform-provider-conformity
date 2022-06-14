@@ -1,0 +1,28 @@
+name: terraform-cron
+on:
+  # here 1 means monday, 2 tuesday ...
+  schedule: [{ cron: '0 0 * * 7' }]
+  workflow_dispatch:
+  push: { branches: ['master', 'main'] }
+jobs:
+  runMultipleCommands:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          repository: shunyeka-spl/tf-provider-test-pipeline
+          token: ${{ secrets.ACCESS_TOKEN }}
+      - run: |
+          # git config --global url."https://${{ secrets.ACESS_TOKEN }}@github".insteadOf https://github
+          wget -qO - terraform.gpg https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/terraform-archive-keyring.gpg
+          sudo echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/terraform-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" > /etc/apt/sources.list.d/terraform.list
+          sudo apt update
+          sudo apt install terraform
+          git clone git@github.com:shunyeka-spl/tf-provider-test-pipeline.git tf-provider
+          cd tf-provider
+          echo "Terraform init"
+          terraform init
+          echo "Terraform apply"
+          terraform apply
+          echo "Terraform destroy"
+          terraform destroy
