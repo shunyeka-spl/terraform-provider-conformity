@@ -1,0 +1,76 @@
+# This GitHub action can test if the provider has any issues for CRD for latest development
+name: test
+on:
+  pull_request
+  push:
+    branches:
+      - main
+jobs:
+  test:
+    permissions: read-all
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: main
+      -
+        name: Unshallow
+        run: |
+          cd main 
+          git fetch --prune --unshallow
+          cd ..
+      -
+        name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.17
+      -
+        name: Install Terraform
+        uses: hashicorp/setup-terraform@v2
+      - 
+        name: Create Provider
+        run: |
+          cd main
+          go mod tidy
+          go mod vendor
+          make install
+          cd ..
+      - 
+        name: Clone the provider pipeline
+        uses: actions/checkout@v3
+        with:
+          path: pipeline
+          repository: shunyeka-spl/tf-provider-test-pipeline
+          token: ${{ secrets.PIPELINE_PAT }} # `PIPELINE_PAT` is a secret that contains PAT
+      - 
+        name: Prepare The Pipeline
+        run: |
+          cd pipeline
+          sed -i 's,trendmicro/conformity,trendmicro/cloudone/conformity,g' provider.tf
+          cd ..
+      - 
+        name: Terraform Init
+        run: |
+          cd pipeline
+          terraform init
+          cd ..
+      - 
+        name: Terraform Plan
+        run: |
+          cd pipeline
+          terraform plan
+          cd ..
+      - 
+        name: Terraform Apply
+        run: |
+          cd pipeline
+          terraform apply --auto-approve
+          cd ..
+      - 
+        name: Terraform Destroy
+        run: |
+          cd pipeline
+          terraform destroy --auto-approve
+          cd ..
