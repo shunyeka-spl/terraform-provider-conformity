@@ -1,10 +1,10 @@
 # This GitHub action can test if the provider has any issues for CRD for latest development
 name: test
 on:
-  pull_request
   push:
     branches:
       - main
+  pull_request:
 jobs:
   test:
     permissions: read-all
