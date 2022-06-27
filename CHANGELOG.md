@@ -1,4 +1,17 @@
-## 0.3.7
+## 0.4.2
+* Made GCP private key sensitive through schema
+* GCP Account Doc
+* conformity_azure_account: environment field should not be required
+
+## 0.4.1
+* GCP read issue fixed
+* Cloudone URL changes and region support
+* Made GCP private key sensitive
+
+## 0.4.0
+* GCP integration
+
+## 0.3.8
 * security vulnerable issue fixed
 * Logging nul payload issue fixed
 
@@ -53,6 +66,8 @@ FEATURES:
 * **New Data Source:** `conformity_external_id`
 * **New Resource:** `conformity_aws_account`
 * **New Resource:** `conformity_azure_account`
+* **New Resource:** `conformity_gcp_account`
+* **New Resource:** `conformity_gcp_org`
 * **New Resource:** `conformity_group`
 * **New Resource:** `conformity_user`
 * **New Resource:** `conformity_sso_user`

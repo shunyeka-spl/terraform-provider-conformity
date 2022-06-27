@@ -20,6 +20,7 @@ import (
 var testAccConformityProviders map[string]*schema.Provider
 var testAccConformityProvider *schema.Provider
 var accountPayload cloudconformity.AccountPayload
+var gcpOrgPayload cloudconformity.GCPOrgPayload
 var groupDetails cloudconformity.GroupDetails
 var userDetails cloudconformity.UserDetails
 var userAccessDetails cloudconformity.UserAccessDetails
@@ -76,26 +77,28 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 
-		var getOrganizationalExternalId = regexp.MustCompile(`^/v1/organisation/external-id/$`)
-		var postApplyProfile = regexp.MustCompile(`^/v1/profiles/(.*)/apply$`)
-		var postAccount = regexp.MustCompile(`^/v1/accounts/$`)
-		var patchAccountRuleSetting = regexp.MustCompile(`^/v1/accounts/(.*)/settings/rules/(.*)$`)
-		var getAccountRuleSetting = regexp.MustCompile(`^/v1/accounts/(.*)/settings/rules$`)
-		var postAzureAccount = regexp.MustCompile(`^/v1/accounts/azure/$`)
-		var accountDetails = regexp.MustCompile(`^/v1/accounts/(.*)$`)
-		var getAccountAccess = regexp.MustCompile(`^/v1/accounts/(.*)/access$`)
-		var postGroup = regexp.MustCompile(`^/v1/groups/$`)
-		var getGroupDetails = regexp.MustCompile(`^/v1/groups/(.*)$`)
-		var postUsers = regexp.MustCompile(`^/v1/users/$`)
-		var postSsoUsers = regexp.MustCompile(`^/v1/users/sso/$`)
-		var getUserDetails = regexp.MustCompile(`^/v1/users/(.*)$`)
-		var postReportconfig = regexp.MustCompile(`^/v1/report-configs/$`)
-		var getReportconfig = regexp.MustCompile(`^/v1/report-configs/(.*)$`)
-		var postCommunicationConfig = regexp.MustCompile(`^/v1/settings/communication/$`)
-		var getCommunicationConfig = regexp.MustCompile(`^/v1/settings/(.*)$`)
-		var postProfile = regexp.MustCompile(`^/v1/profiles/$`)
-		var getProfile = regexp.MustCompile(`^/v1/profiles/(.*)$`)
-		var patchBotSettings = regexp.MustCompile(`^/v1/accounts/(.*)/settings/bot$`)
+		var getOrganizationalExternalId = regexp.MustCompile(`^/organisation/external-id/$`)
+		var postApplyProfile = regexp.MustCompile(`^/profiles/(.*)/apply$`)
+		var postAccount = regexp.MustCompile(`^/accounts/$`)
+		var patchAccountRuleSetting = regexp.MustCompile(`^/accounts/(.*)/settings/rules/(.*)$`)
+		var getAccountRuleSetting = regexp.MustCompile(`^/accounts/(.*)/settings/rules$`)
+		var postAzureAccount = regexp.MustCompile(`^/accounts/azure/$`)
+		var postGCPAccount = regexp.MustCompile(`^/accounts/gcp/$`)
+		var postGCPOrg = regexp.MustCompile(`^/gcp/organisations/$`)
+		var accountDetails = regexp.MustCompile(`^/accounts/(.*)$`)
+		var getAccountAccess = regexp.MustCompile(`^/accounts/(.*)/access$`)
+		var postGroup = regexp.MustCompile(`^/groups/$`)
+		var getGroupDetails = regexp.MustCompile(`^/groups/(.*)$`)
+		var postUsers = regexp.MustCompile(`^/users/$`)
+		var postSsoUsers = regexp.MustCompile(`^/users/sso/$`)
+		var getUserDetails = regexp.MustCompile(`^/users/(.*)$`)
+		var postReportconfig = regexp.MustCompile(`^/report-configs/$`)
+		var getReportconfig = regexp.MustCompile(`^/report-configs/(.*)$`)
+		var postCommunicationConfig = regexp.MustCompile(`^/settings/communication/$`)
+		var getCommunicationConfig = regexp.MustCompile(`^/settings/(.*)$`)
+		var postProfile = regexp.MustCompile(`^/profiles/$`)
+		var getProfile = regexp.MustCompile(`^/profiles/(.*)$`)
+		var patchBotSettings = regexp.MustCompile(`^/accounts/(.*)/settings/bot$`)
 
 		switch {
 		case getOrganizationalExternalId.MatchString(r.URL.Path):
@@ -113,6 +116,12 @@ func createConformityMock() (*cloudconformity.Client, *httptest.Server) {
 		case postAzureAccount.MatchString(r.URL.Path):
 			_ = readRequestBody(r, &accountPayload)
 			w.Write([]byte(`{ "data": { "type": "accounts", "id": "H19NxMi5-" } }`))
+		case postGCPAccount.MatchString(r.URL.Path):
+			_ = readRequestBody(r, &accountPayload)
+			w.Write([]byte(`{ "data": { "type": "accounts", "id": "H19NxMi5-" } }`))
+		case postGCPOrg.MatchString(r.URL.Path):
+			_ = readRequestBody(r, &accountPayload)
+			w.Write([]byte(`{ "data": { "type": "gcp-organisations", "id": "H19NxMi5-" } }`))
 		case getAccountAccess.MatchString(r.URL.Path):
 			w.Write([]byte(`{
 				"id": "BJ0Ox16Hb:access",
