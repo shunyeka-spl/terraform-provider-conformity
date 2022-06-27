@@ -69,6 +69,7 @@ jobs:
           terraform apply --auto-approve
           cd ..
       - 
+        if: always()
         name: Terraform Destroy
         run: |
           cd pipeline
