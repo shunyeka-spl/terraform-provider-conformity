@@ -60,18 +60,18 @@ jobs:
         name: Terraform Plan
         run: |
           cd pipeline
-          terraform plan
+          terraform plan -var "key=${{ secrets.MY_KEY_VAR }}"  -var "apikey=${{ secrets.MY_CONFORMITY_API_KEY }}" -var "access_key=${{ secrets.MY_AWS_ACCESS_KEY }}" -var "secret_key=${{ secrets.MY_AWS_SECRET_KEY }}"
           cd ..
       - 
         name: Terraform Apply
         run: |
           cd pipeline
-          terraform apply --auto-approve
+          terraform apply --auto-approve -var "key=${{ secrets.MY_KEY_VAR }}"  -var "apikey=${{ secrets.MY_CONFORMITY_API_KEY }}" -var "access_key=${{ secrets.MY_AWS_ACCESS_KEY }}" -var "secret_key=${{ secrets.MY_AWS_SECRET_KEY }}"
           cd ..
       - 
         if: always()
         name: Terraform Destroy
         run: |
           cd pipeline
-          terraform destroy --auto-approve
+          terraform destroy --auto-approve -var "key=${{ secrets.MY_KEY_VAR }}"  -var "apikey=${{ secrets.MY_CONFORMITY_API_KEY }}" -var "access_key=${{ secrets.MY_AWS_ACCESS_KEY }}" -var "secret_key=${{ secrets.MY_AWS_SECRET_KEY }}"
           cd ..
