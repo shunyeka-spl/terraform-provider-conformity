@@ -44,7 +44,7 @@ jobs:
           make install
           cd ..
       - 
-        name: Create Provider
+        name: Run Unit Test
         run: |
           cd main
           TF_ACC=1 go test -v
