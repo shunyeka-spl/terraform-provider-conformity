@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - test-pipeline
   pull_request:
 jobs:
   test:
@@ -41,6 +42,12 @@ jobs:
           go mod tidy
           go mod vendor
           make install
+          cd ..
+      - 
+        name: Create Provider
+        run: |
+          cd main
+          TF_ACC=1 go test -v
           cd ..
       - 
         name: Clone the provider pipeline
