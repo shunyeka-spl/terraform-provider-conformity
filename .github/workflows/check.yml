@@ -35,6 +35,8 @@ jobs:
       -
         name: Install Terraform
         uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
       - 
         name: Create Provider
         run: |
