@@ -46,9 +46,9 @@ jobs:
       - 
         name: Run Unit Test
         run: |
-          cd main
+          cd main/conformity
           TF_ACC=1 go test -v
-          cd ..
+          cd ../../
       - 
         name: Clone the provider pipeline
         uses: actions/checkout@v3
